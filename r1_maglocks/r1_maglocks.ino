@@ -32,32 +32,32 @@ void loop() {
   }
   //if (respuesta.toInt() > 5) { }
 
+  //electroiman de escudo de atena
+  if (arcana.respuesta.toInt() >= 5) {
+    digitalWrite(D0, LOW);
+  }
   //maquina de humo
-  if (arcana.respuesta.toInt() >= 8) {
-    digitalWrite(D0, HIGH);
+  if (arcana.respuesta.toInt() >= 1) {
+    digitalWrite(D1, LOW);
   }
   //luz del cuarto
   if (arcana.respuesta.toInt() >= 12) {
-    digitalWrite(D1, HIGH);
-    digitalWrite(D2, HIGH);
+    digitalWrite(D2, LOW);
+    digitalWrite(D3, LOW);
   }
 
-  //electroiman de la esfinge
-  if (arcana.respuesta.toInt() >= 6) {
-    digitalWrite(D3, HIGH);
-  }
 
   //electroiman de la esfinge
   if (arcana.respuesta.toInt() >= 15) {
-    digitalWrite(D6, HIGH);
-  }
-  
-  //electroiman de la puerta
-  if (arcana.respuesta.toInt() >= 16) {
-    digitalWrite(D7, HIGH);
+    digitalWrite(D5, LOW);
   }
 
-  String estado = "respuesta=" + arcana.respuesta.substring(1, 2);
+  //electroiman de la puerta
+  if (arcana.respuesta.toInt() >= 16) {
+    digitalWrite(D6, LOW);
+  }
+
+  String estado = "progreso=" + arcana.respuesta.substring(1, 3);
 
   arcana.estado(estado);
   ///////////////////////////////
@@ -65,13 +65,13 @@ void loop() {
 }
 
 void reset() {
-  digitalWrite(D0, LOW);
-  digitalWrite(D1, LOW);
-  digitalWrite(D2, LOW);
-  digitalWrite(D3, LOW);
+  digitalWrite(D0, HIGH);
+  digitalWrite(D1, HIGH);
+  digitalWrite(D2, HIGH);
+  digitalWrite(D3, HIGH);
 
-  digitalWrite(D5, LOW);
-  digitalWrite(D6, LOW);
-  digitalWrite(D7, LOW);
-  digitalWrite(D8, LOW);
+  digitalWrite(D5, HIGH);
+  digitalWrite(D6, HIGH);
+  digitalWrite(D7, HIGH);
+  digitalWrite(D8, HIGH);
 }

@@ -44,7 +44,7 @@ void Arcana::conectar() {
     leerRespuesta();
     while (respuesta.substring(1, 4).equals("off")) {
         Serial.println("Juego OFF. Esperando 30 segundos");
-        delay(30000);
+        delay(10000);
         leerRespuesta();
     }
 }
@@ -65,24 +65,28 @@ void Arcana::leerRespuesta() {
     url += _gizmoName;
     url += "/?";
     url += String(_estado);
-//    Serial.print(host);
-//    Serial.println(url);
+    Serial.print(host);
+    Serial.println(url);
     client.print(String("GET ") + url + " HTTP/1.1\r\n" +
                  "Host: " + host + "\r\n" +
                  "Connection: close\r\n\r\n");
     unsigned long timeout = millis();
     while (client.available() == 0) {
         if (millis() - timeout > 5000) {
+            Serial.println("Timeout");
             client.stop();
             return;
         }
     }
     while (client.available()) {
+//        Serial.println("Client available");
         respuesta = client.readStringUntil('\r');
     }
+    Serial.println(respuesta);
 }
 
 void Arcana::estado(String texto)
 {
+//    Serial.println("Nuevo estado:" + texto);
     _estado = texto;
 }
