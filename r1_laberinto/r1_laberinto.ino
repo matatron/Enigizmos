@@ -11,6 +11,7 @@ bool isReset = false;
 
 void setup() {
   pinMode(D0, INPUT);
+  pinMode(D6, OUTPUT);
   myservo.attach(D1);
   myservo.write(90);
   reset();
@@ -26,6 +27,12 @@ void loop() {
   }
   counter--;
   //    ///////////////////////////////
+  if (arcana.respuesta.substring(1, 4).equals("off") && !isReset) {
+    reset();
+  }
+  if (arcana.respuesta.substring(1, 4).equals("on") && !isReset) {
+    reset();
+  }
   if (arcana.respuesta.toInt() == 0 && !isReset) {
     reset();
   }
@@ -33,6 +40,12 @@ void loop() {
 
   if (digitalRead(D0) == HIGH) {
     isWon = true;
+    digitalWrite(D6, LOW);
+    isReset = false;
+  }
+  if (arcana.respuesta.toInt() >= 13) {
+    isWon = true;
+    digitalWrite(D6, LOW);
     isReset = false;
   }
 
@@ -44,6 +57,7 @@ void loop() {
 void reset() {
   isWon = false;
   isReset = true;
+  digitalWrite(D6, HIGH);
   myservo.write(0);
   delay(500);
   myservo.write(90);

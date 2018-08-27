@@ -37,26 +37,34 @@ void setup() {
 void loop() {
   String estado;
 
+  if (counter == 0) {
+    arcana.conectar();
+    counter = 100 ;
+  }
+  counter--;
+  //    ///////////////////////////////
+  if (arcana.respuesta.substring(1, 4).equals("off") && !isReset) {
+    reset();
+  }
+  if (arcana.respuesta.substring(1, 4).equals("on") && !isReset) {
+    reset();
+  }
+  if (arcana.respuesta.toInt() == 0 && !isReset) {
+    reset();
+  }
+  if (arcana.respuesta.toInt() >= 14 && !isReset) {
+    modo = 2;
+  }
+
+
   if (modo == 0) {
     estado = "modo=dormida";
     arcana.estado(estado);
 
-    if (counter == 0) {
-      arcana.conectar();
-      counter = 50;
+    for (i = 0; i < 7; i ++) {
+      digitalWrite(LED[i], LOW);
     }
-    counter--;
 
-      for (i = 0; i < 7; i ++) {
-        digitalWrite(LED[i], LOW);
-      }
-
-    if (arcana.respuesta.toInt() == 0 && !isReset) {
-      reset();
-    }
-    if (arcana.respuesta.substring(1, 4).equals("off") && !isReset) {
-      reset();
-    }
 
     if (arcana.respuesta.toInt() >= 13) {
       for (i = 0; i < 7; i ++) {
@@ -93,13 +101,13 @@ void loop() {
 
       modo =  1;
       isReset = false;
-    }
+      estado = "modo=despierta";
+      arcana.estado(estado);
+    } 
 
   }
 
   if (modo == 1) {
-    estado = "modo=despierta";
-    arcana.estado(estado);
 
 
     currentButton = none;
@@ -114,7 +122,9 @@ void loop() {
     }
 
     if (currentButton != lastButton) {
-      lastButton = currentButton;
+     estado = "modo=jugando";
+      arcana.estado(estado);
+     lastButton = currentButton;
 
       if (currentButton != none) {
 
@@ -126,7 +136,6 @@ void loop() {
           case 1:
             light[currentButton] = 1 - light[currentButton];
             light[4] = 1 - light[4];
-            light[5] = 1 - light[5];
             break;
           case 2:
             light[currentButton] = 1 - light[currentButton];
@@ -139,16 +148,15 @@ void loop() {
           case 4:
             light[currentButton] = 1 - light[currentButton];
             light[1] = 1 - light[1];
-            light[6] = 1 - light[6];
             break;
           case 5:
             light[currentButton] = 1 - light[currentButton];
             light[0] = 1 - light[0];
-            light[2] = 1 - light[2];
             break;
           case 6:
             light[currentButton] = 1 - light[currentButton];
-            light[4] = 1 - light[4];
+            light[0] = 1 - light[0];
+            light[5] = 1 - light[5];
             break;
           case 7:
             light[2] = 1 - light[2];
@@ -163,6 +171,10 @@ void loop() {
       if (light[i] == 1) isWon = false;
       digitalWrite(LED[i], light[i]);
     }
+
+    if (arcana.respuesta.toInt() >= 14) {
+      isWon = true;
+    }    
 
     if (isWon) {
       for (i = 0; i < 7; i ++) {
@@ -187,20 +199,6 @@ void loop() {
   if (modo == 2) {
     estado = "modo=derrotada";
     arcana.estado(estado);
-
-    if (counter == 0) {
-      arcana.conectar();
-      counter = 50;
-    }
-    counter--;
-
-    if (arcana.respuesta.toInt() == 0 && !isReset) {
-      reset();
-    }
-    if (arcana.respuesta.substring(1, 4).equals("off") && !isReset) {
-      reset();
-    }
-
   }
 
   delay(20);

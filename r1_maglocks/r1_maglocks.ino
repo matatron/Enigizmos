@@ -27,6 +27,12 @@ void loop() {
   }
   counter--;
   ///////////////////////////////
+  if (arcana.respuesta.substring(1, 4).equals("off")) {
+    reset();
+  }
+  if (arcana.respuesta.substring(1, 3).equals("on")) {
+    reset();
+  }
   if (arcana.respuesta.toInt() == 0) {
     reset();
   }
@@ -45,19 +51,13 @@ void loop() {
     digitalWrite(D2, LOW);
     digitalWrite(D3, LOW);
   }
-
-
   //electroiman de la esfinge
-  if (arcana.respuesta.toInt() >= 15) {
+  if (arcana.respuesta.toInt() >= 17) {
     digitalWrite(D5, LOW);
   }
 
-  //electroiman de la puerta
-  if (arcana.respuesta.toInt() >= 16) {
-    digitalWrite(D6, LOW);
-  }
 
-  String estado = "progreso=" + arcana.respuesta.substring(1, 3);
+  String estado = "";
 
   arcana.estado(estado);
   ///////////////////////////////

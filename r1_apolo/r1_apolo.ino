@@ -50,17 +50,15 @@ void loop() {
     }
 
   }
-
-  Serial.print(digitalRead(D0));
-  Serial.print(digitalRead(D1));
-  Serial.print(digitalRead(D2));
-  Serial.print(digitalRead(D3));
-  Serial.println(digitalRead(D5));
-  
-
+ 
   estado += (zeusWon ? String("zeus=on") : String("zeus=off"));
   estado += String("&");
   estado += (apoloWon ? String("apolo=on") : String("apolo=off"));
+  estado += String("&cuerdas=");
+  estado += String(1-digitalRead(D0));
+  estado += String(1-digitalRead(D1));
+  estado += String(1-digitalRead(D2));
+  estado += String(1-digitalRead(D3));
 
   arcana.estado(estado);
 
