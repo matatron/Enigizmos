@@ -19,7 +19,7 @@ Firmata is a protocol for communicating with microcontrollers from software on a
 
 ## Usage
 
-There are two main models of usage of Firmata. In one model, the author of the Arduino sketch uses the various methods provided by the Firmata library to selectively send and receive data between the Arduino device and the software running on the host computer. For example, a user can send analog data to the host using ``` Firmata.sendAnalog(analogPin, analogRead(analogPin)) ``` or send data packed in a string using ``` Firmata.sendString(stringToSend) ```. See File -> Examples -> Firmata -> AnalogFirmata & EchoString respectively for examples.
+There are two main models of usage of Firmata. In one model, the author of the Arduino sketch uses the various methods provided by the Firmata library to selectively send and receive data between the Arduino device and the software running on the host computer. For example, a user can send analog data to the host using ``` Firmata.sendAnalog(analogPin, analogRead(analogPin)) ``` or send data packed in a string using ``` Firmata.sendString(stringToSend) ```. See File -> Examples -> Firmata -> AnalogFirmata & EchoString respectively for examples. Browse the API documentation [here](https://firmata.github.io/arduino/html/index.html).
 
 The second and more common model is to load a general purpose sketch called StandardFirmata (or one of the variants such as StandardFirmataPlus or StandardFirmataEthernet depending on your needs) on the Arduino board and then use the host computer exclusively to interact with the Arduino board. StandardFirmata is located in the Arduino IDE in File -> Examples -> Firmata.
 
@@ -28,10 +28,9 @@ Most of the time you will be interacting with Arduino with a client library on t
 
 * processing
   * [https://github.com/firmata/processing](https://github.com/firmata/processing)
-  * [http://funnel.cc](http://funnel.cc)
 * python
-  * [https://github.com/MrYsLab/pymata-aio](https://github.com/MrYsLab/pymata-aio)
-  * [https://github.com/MrYsLab/PyMata]([https://github.com/MrYsLab/PyMata)
+  * [https://github.com/MrYsLab/pymata4](https://github.com/MrYsLab/pymata4)
+  * [https://github.com/MrYsLab/pymata-express](https://github.com/MrYsLab/pymata-express)
   * [https://github.com/tino/pyFirmata](https://github.com/tino/pyFirmata)
   * [https://github.com/lupeke/python-firmata](https://github.com/lupeke/python-firmata)
   * [https://github.com/firmata/pyduino](https://github.com/firmata/pyduino)
@@ -46,9 +45,10 @@ Most of the time you will be interacting with Arduino with a client library on t
   * [https://github.com/nakkaya/clodiuno](https://github.com/nakkaya/clodiuno)
   * [https://github.com/peterschwarz/clj-firmata](https://github.com/peterschwarz/clj-firmata)
 * javascript
-  * [https://github.com/jgautier/firmata](https://github.com/jgautier/firmata)
+  * [https://github.com/firmata/firmata.js](https://github.com/firmata/firmata.js)
   * [https://github.com/rwldrn/johnny-five](https://github.com/rwldrn/johnny-five)
   * [http://breakoutjs.com](http://breakoutjs.com)
+  * [https://nodered.org/docs/faq/interacting-with-arduino#firmata](https://nodered.org/docs/faq/interacting-with-arduino#firmata)
 * java
   * [https://github.com/kurbatov/firmata4j](https://github.com/kurbatov/firmata4j)
   * [https://github.com/4ntoine/Firmata](https://github.com/4ntoine/Firmata)
@@ -59,8 +59,10 @@ Most of the time you will be interacting with Arduino with a client library on t
 * Flash/AS3
   * [http://funnel.cc](http://funnel.cc)
   * [http://code.google.com/p/as3glue/](http://code.google.com/p/as3glue/)
+* Pharo
+  * [https://github.com/pharo-iot/Firmata](https://github.com/pharo-iot/Firmata)
 * PHP
-  * [https://github.com/ThomasWeinert/carica-firmata]()
+  * [https://github.com/ThomasWeinert/carica-firmata](https://github.com/ThomasWeinert/carica-firmata)
   * [https://github.com/oasynnoum/phpmake_firmata](https://github.com/oasynnoum/phpmake_firmata)
 * Haskell
   * [http://hackage.haskell.org/package/hArduino](http://hackage.haskell.org/package/hArduino)
@@ -70,6 +72,7 @@ Most of the time you will be interacting with Arduino with a client library on t
   * [https://github.com/nfrancois/firmata](https://github.com/nfrancois/firmata)
 * Max/MSP
   * [http://www.maxuino.org/](http://www.maxuino.org/)
+  * [https://github.com/NullMember/MaxFirmata](https://github.com/NullMember/MaxFirmata)
 * Elixir
   * [https://github.com/kfatehi/firmata](https://github.com/kfatehi/firmata)
 * Modelica
@@ -82,6 +85,10 @@ Most of the time you will be interacting with Arduino with a client library on t
   * [http://openframeworks.cc/documentation/communication/ofArduino/](http://openframeworks.cc/documentation/communication/ofArduino/)
 * Rust
   * [https://github.com/zankich/rust-firmata](https://github.com/zankich/rust-firmata)
+* Pure Data
+  * [https://github.com/NullMember/PDFirmata](https://github.com/NullMember/PDFirmata)
+* Common Lisp
+  * [https://github.com/cjfuller/cl-firmata](https://github.com/cjfuller/cl-firmata)
 
 Note: The above libraries may support various versions of the Firmata protocol and therefore may not support all features of the latest Firmata spec nor all Arduino and Arduino-compatible boards. Refer to the respective projects for details.
 
@@ -107,7 +114,7 @@ $ git clone git@github.com:firmata/arduino.git ~/Documents/Arduino/libraries/Fir
 
 ## Updating Firmata in the Arduino IDE - older versions (<= 1.6.3 or 1.0.x)
 
-Download the latest [release](https://github.com/firmata/arduino/releases/tag/2.5.7) (for Arduino 1.0.x or Arduino 1.5.6 or higher) and replace the existing Firmata folder in your Arduino application. See the instructions below for your platform.
+Download the latest [release](https://github.com/firmata/arduino/releases/tag/2.5.8) (for Arduino 1.0.x or Arduino 1.5.6 or higher) and replace the existing Firmata folder in your Arduino application. See the instructions below for your platform.
 
 *Note that Arduino 1.5.0 - 1.5.5 are not supported. Please use Arduino 1.5.6 or higher (or Arduino 1.0.5 or 1.0.6).*
 
@@ -118,7 +125,7 @@ The Firmata library is contained within the Arduino package.
 1. Navigate to the Arduino application
 2. Right click on the application icon and select `Show Package Contents`
 3. Navigate to: `/Contents/Resources/Java/libraries/` and replace the existing
-`Firmata` folder with latest [Firmata release](https://github.com/firmata/arduino/releases/tag/2.5.7) (note there is a different download
+`Firmata` folder with latest [Firmata release](https://github.com/firmata/arduino/releases/tag/2.5.8) (note there is a different download
 for Arduino 1.0.x vs 1.6.x)
 4. Restart the Arduino application and the latest version of Firmata will be available.
 
@@ -128,7 +135,7 @@ will differ slightly: `Contents/Java/libraries/Firmata` (no Resources directory)
 ### Windows:
 
 1. Navigate to `c:/Program\ Files/arduino-1.x/libraries/` and replace the existing
-`Firmata` folder with the latest [Firmata release](https://github.com/firmata/arduino/releases/tag/2.5.7) (note there is a different download
+`Firmata` folder with the latest [Firmata release](https://github.com/firmata/arduino/releases/tag/2.5.8) (note there is a different download
 for Arduino 1.0.x vs 1.6.x).
 2. Restart the Arduino application and the latest version of Firmata will be available.
 
@@ -137,7 +144,7 @@ for Arduino 1.0.x vs 1.6.x).
 ### Linux:
 
 1. Navigate to `~/arduino-1.x/libraries/` and replace the existing
-`Firmata` folder with the latest [Firmata release](https://github.com/firmata/arduino/releases/tag/2.5.7) (note there is a different download
+`Firmata` folder with the latest [Firmata release](https://github.com/firmata/arduino/releases/tag/2.5.8) (note there is a different download
 for Arduino 1.0.x vs 1.6.x).
 2. Restart the Arduino application and the latest version of Firmata will be available.
 

@@ -1,10 +1,12 @@
-// ArduinoJson - arduinojson.org
-// Copyright Benoit Blanchon 2014-2019
+// ArduinoJson - https://arduinojson.org
+// Copyright © 2014-2023, Benoit BLANCHON
 // MIT License
 
 #pragma once
 
-namespace ARDUINOJSON_NAMESPACE {
+#include <ArduinoJson/Namespace.hpp>
+
+ARDUINOJSON_BEGIN_PRIVATE_NAMESPACE
 
 // A meta-function that return the type T without the const modifier
 template <typename T>
@@ -15,4 +17,5 @@ template <typename T>
 struct remove_const<const T> {
   typedef T type;
 };
-}  // namespace ARDUINOJSON_NAMESPACE
+
+ARDUINOJSON_END_PRIVATE_NAMESPACE
