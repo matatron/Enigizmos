@@ -1,7 +1,15 @@
-#include "Arduino.h"
+#include <Arduino.h>
 #include "Arcana3.h"
+
 #include <ArduinoJson.h>
 #include <ESP8266WiFi.h>
+
+#include <ESP8266HTTPClient.h>
+
+#include <WiFiClient.h>
+
+WiFiClient client;
+HTTPClient http;
 
 #define LED_BUILTIN 2
 #define D0 16
@@ -24,21 +32,21 @@ Arcana3::Arcana3(String gizmoName, bool LED)
     _useLED = LED;
     _estado = "";
     status = 0;
-    config = String("");
-    respuesta = String("");
 }
 
 void Arcana3::init() {
-    char* ssid = "Arcana";
-    char* password = "2.718281";
-    WiFi.mode(WIFI_STA); // Modo cliente WiFi
-    WiFi.begin(ssid, password);
+    WiFi.mode(WIFI_STA);
+    WiFi.begin("Enigmata", "2.718281");
+
     pinMode(LED_BUILTIN, OUTPUT);
-    while (WiFi.status() != WL_CONNECTED) {
+
+    while (WiFi.status() != WL_CONNECTED) 
+    {
         delay(100);
         digitalWrite(LED_BUILTIN, LOW);
         delay(100);
         digitalWrite(LED_BUILTIN, HIGH);
+        Serial.print('.');
     }
     leerConfiguracion();
 }
@@ -46,11 +54,6 @@ void Arcana3::init() {
 
 void Arcana3::conectar() {
     leerRespuesta();
-//    while (respuesta.substring(1, 4).equals("off")) {
-//        Serial.println("Juego OFF. Esperando 2 segundos");
-//        delay(2000);
-//        leerRespuesta();
-//    }
 }
 
 void Arcana3::configurar() {
@@ -58,105 +61,80 @@ void Arcana3::configurar() {
 }
 
 bool Arcana3::acertijo(int n) {
-    return (puzzles[n-1] == '1');
+    bool response = false;
+    String progress = (String) data["progress"];
+    if (progress) {
+        response = progress.charAt(n-1) == '1';
+    }
+    return response;
 }
 
 
 void Arcana3::leerConfiguracion() {
-    char* host = "192.168.2.83";
-    if (_useLED)  {
-        digitalWrite(LED_BUILTIN, LOW);
-        delay(50);
-        digitalWrite(LED_BUILTIN, HIGH);
-    }
-    WiFiClient client;
-    if (!client.connect(host, 80)) {
-        Serial.println("No hay conexion");
-        return;
-    }
-    String url = "/gizmo/config/"+_gizmoName;
-    //Serial.print(host);
-    //Serial.println(url);
-    client.setNoDelay(1);
-    client.print(String("GET ") + url + " HTTP/1.1\r\n" +
-                 "Host: " + host + "\r\n" +
-                 "Connection: close\r\n\r\n");
-    unsigned long timeout = millis();
-    while (client.available() == 0) {
-        if (millis() - timeout > 5000) {
-            Serial.println("Timeout");
-            client.stop();
-            return;
+    if (http.begin(client, "http://192.168.2.83/gizmo/config/"+_gizmoName)) {  // HTTP
+        if (_useLED)  {
+            digitalWrite(LED_BUILTIN, LOW);
+            delay(50);
+            digitalWrite(LED_BUILTIN, HIGH);
+        }
+
+        // start connection and send HTTP header
+        int httpCode = http.GET();
+
+        // httpCode will be negative on error
+        if (httpCode > 0) {
+            if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
+                String payload = http.getString();
+                Serial.println(payload);
+                DeserializationError error = deserializeJson(config, payload);
+                if (error) {
+                    Serial.print(F("deserializeJson() failed: "));
+                    Serial.println(error.c_str());
+                    return;
+                }
+            }
+        } else {
+            Serial.printf("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
         }
     }
-    while (client.available()) {
-        //        Serial.println("Client available");
-        config = client.readStringUntil('\r');
-    }
-    client.stop();
-
-    config = config.substring(1);
-    Serial.println(config);
 }
 
 
 void Arcana3::leerRespuesta() {
-    unsigned long time = millis();
-    char* host = "192.168.2.83";
-    if (_useLED)  {
-        digitalWrite(LED_BUILTIN, LOW);
-        delay(50);
-        digitalWrite(LED_BUILTIN, HIGH);
-    }
-    WiFiClient client;
-    if (!client.connect(host, 80)) {
-        Serial.println("No hay conexion");
-        return;
-    }
-    String url = "/gizmo/reportjson/";
-    url += _gizmoName;
-    url += "/?";
-    url += String(_estado);
-    //url.replace(' ', '_');
-    url.replace(" ", "%20");
-    //Serial.print(host);
-    //Serial.println(url);
-    client.setNoDelay(1);
-    client.print(String("GET ") + url + " HTTP/1.1\r\n" +
-                 "Host: " + host + "\r\n" +
-                 "Connection: close\r\n\r\n");
-    unsigned long timeout = millis();
-    while (client.available() == 0) {
-        if (millis() - timeout > 5000) {
-            Serial.println("Timeout");
-            client.stop();
-            return;
+    if (http.begin(client, "http://192.168.2.83/gizmo/report/"+_gizmoName+"?"+String(_estado))) {  // HTTP
+        if (_useLED)  {
+            digitalWrite(LED_BUILTIN, LOW);
+            delay(50);
+            digitalWrite(LED_BUILTIN, HIGH);
+        }
+
+        // start connection and send HTTP header
+        int httpCode = http.GET();
+
+        // httpCode will be negative on error
+        if (httpCode > 0) {
+            if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
+                String payload = http.getString();
+                DeserializationError error = deserializeJson(data, payload);
+                if (error) {
+                    Serial.print(("deserializeJson() failed: "));
+                    Serial.println(error.c_str());
+                    return;
+                }
+                status = (int) data["status"];
+                //Serial.println(payload);
+            }
+        } else {
+            Serial.printf("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
         }
     }
-    while (client.available()) {
-        respuesta = client.readStringUntil('\r');
-    }
-    //Serial.println(respuesta);
-    client.stop();
-    DeserializationError error = deserializeJson(doc, respuesta);
-
-    // Test if parsing succeeds.
-    if (error) {
-        Serial.print(F("deserializeJson() failed: "));
-        Serial.println(error.c_str());
-        return;
-    }
-
-    status = doc["status"];
-    puzzles = doc["puzzles"];
-    
-    //Serial.print("Time: ");
-    //Serial.println(millis() - time);
     
 }
 
 void Arcana3::estado(String texto)
 {
 //    Serial.println("Nuevo estado:" + texto);
+    //texto.replace(' ', '_');
+    texto.replace(" ", "%20");
     _estado = texto;
 }

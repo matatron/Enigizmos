@@ -1,9 +1,10 @@
 #ifndef Arcana3_h
 #define Arcana3_h
 
-#include "Arduino.h"
+#include <Arduino.h>
 #include <ArduinoJson.h>
 #include <ESP8266WiFi.h>
+#include <ESP8266WiFiMulti.h>
 
 class Arcana3
 {
@@ -15,10 +16,8 @@ class Arcana3
     bool acertijo(int n);
     void estado(String texto);
     int status;
-    const char* puzzles;
-    String respuesta;
-    String config;
-    StaticJsonDocument<300> doc;
+    StaticJsonDocument<300> config;
+    StaticJsonDocument<300> data;
   private:
     void leerRespuesta();
     void leerConfiguracion();
